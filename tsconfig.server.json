@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": false,
+    "outDir": "server-dist",
+    "rootDir": ".",
+    "types": ["node"]
+  },
+  "include": [
+    "server/**/*.ts",
+    "src/data/**/*.ts",
+    "src/lib/csv.ts",
+    "src/lib/flightResourceTypes.ts"
+  ]
+}

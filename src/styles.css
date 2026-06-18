@@ -1,0 +1,337 @@
+:root {
+  color: #e6f7ff;
+  background: #02040a;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --panel: rgba(7, 15, 27, 0.74);
+  --panel-border: rgba(125, 211, 252, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 62% 52%, rgba(15, 62, 82, 0.34), transparent 38%),
+    radial-gradient(circle at 18% 18%, rgba(100, 116, 139, 0.16), transparent 24%),
+    linear-gradient(145deg, #030713 0%, #06101d 43%, #02040a 100%);
+  overflow: hidden;
+}
+
+.globe-stage {
+  position: absolute;
+  inset: 0;
+}
+
+.globe-canvas {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.globe-canvas:active {
+  cursor: grabbing;
+}
+
+.control-panel {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  display: grid;
+  width: min(370px, calc(100vw - 48px));
+  max-height: calc(100vh - 48px);
+  gap: 18px;
+  padding: 20px;
+  overflow-y: auto;
+  color: #e9fbff;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(18px);
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  color: #06111f;
+  background: #7dd3fc;
+  border-radius: 8px;
+  box-shadow: 0 0 26px rgba(125, 211, 252, 0.42);
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.35rem;
+  font-weight: 720;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+.brand-row p {
+  margin-top: 4px;
+  color: #a9c6d3;
+  font-size: 0.92rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stat-grid div {
+  min-width: 0;
+  padding: 12px;
+  background: rgba(4, 12, 23, 0.78);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 8px;
+}
+
+.stat-grid span,
+.field-label,
+.flight-detail span,
+.flight-detail dt {
+  display: block;
+  color: #8fb5c6;
+  font-size: 0.76rem;
+  font-weight: 680;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.stat-grid strong {
+  display: block;
+  margin-top: 5px;
+  color: #ffffff;
+  font-size: 1.02rem;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 104px;
+  gap: 10px;
+  align-items: end;
+}
+
+.filter-field {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.select-input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  color: #f8fcff;
+  background: rgba(4, 12, 23, 0.9);
+  border: 1px solid rgba(125, 211, 252, 0.3);
+  border-radius: 8px;
+  outline: none;
+}
+
+.select-input:focus {
+  border-color: #67e8f9;
+  box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.14);
+}
+
+.upload-field {
+  display: grid;
+  gap: 8px;
+}
+
+.file-input-label {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 40px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 13px;
+  color: #ecfeff;
+  background: rgba(8, 47, 73, 0.7);
+  border: 1px solid rgba(125, 211, 252, 0.32);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.file-input-label:hover {
+  border-color: rgba(103, 232, 249, 0.72);
+}
+
+.file-input-label svg {
+  color: #67e8f9;
+}
+
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.file-input:focus-visible + .file-input-label,
+.file-input-label:focus-within {
+  border-color: #67e8f9;
+  box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.14);
+}
+
+.hint-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #bdd7e2;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.hint-row svg {
+  flex: 0 0 auto;
+  color: #67e8f9;
+}
+
+.flight-detail {
+  padding: 15px;
+  background: rgba(4, 12, 23, 0.82);
+  border: 1px solid rgba(125, 211, 252, 0.24);
+  border-radius: 8px;
+}
+
+.flight-detail.muted {
+  border-color: rgba(148, 163, 184, 0.14);
+}
+
+.flight-detail h2 {
+  margin-top: 6px;
+  font-size: 1.22rem;
+  line-height: 1.16;
+  letter-spacing: 0;
+}
+
+.flight-detail p {
+  margin-top: 8px;
+  color: #b6d1dc;
+  font-size: 0.9rem;
+  line-height: 1.42;
+}
+
+.flight-detail dl {
+  display: grid;
+  gap: 10px;
+  margin: 15px 0 0;
+}
+
+.flight-detail div {
+  min-width: 0;
+}
+
+.flight-detail dd {
+  margin: 3px 0 0;
+  color: #f5fbff;
+  line-height: 1.32;
+}
+
+.warning-panel,
+.error-panel,
+.loading-panel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.warning-panel {
+  color: #fde68a;
+  background: rgba(91, 63, 6, 0.32);
+  border: 1px solid rgba(251, 191, 36, 0.24);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.error-panel,
+.loading-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 220px;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  color: #e0f7ff;
+  background: rgba(7, 15, 27, 0.88);
+  border: 1px solid var(--panel-border);
+}
+
+@media (max-width: 760px) {
+  body {
+    overflow: auto;
+    background: #02040a;
+  }
+
+  .app-shell {
+    min-height: 100svh;
+    overflow: auto;
+  }
+
+  .globe-stage {
+    position: relative;
+    height: 64svh;
+    min-height: 430px;
+  }
+
+  .control-panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: auto;
+    max-height: none;
+    margin: -24px 16px 16px;
+  }
+
+  .filter-grid {
+    grid-template-columns: 1fr;
+  }
+}

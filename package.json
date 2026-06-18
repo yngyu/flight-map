@@ -1,0 +1,30 @@
+{
+  "name": "flight-map",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "dev:api": "npm run build:server && HOST=127.0.0.1 PORT=8787 node server-dist/server/index.js",
+    "build": "tsc && vite build && npm run build:server",
+    "build:server": "tsc -p tsconfig.server.json",
+    "preview": "vite preview --host 127.0.0.1",
+    "start": "node server-dist/server/index.js"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^6.0.2",
+    "lucide-react": "^1.21.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "three": "^0.184.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.0.16"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.184.1",
+    "playwright": "^1.61.0"
+  }
+}
