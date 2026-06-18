@@ -59,6 +59,37 @@ select {
   cursor: grabbing;
 }
 
+.github-link {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  z-index: 2;
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  min-height: 36px;
+  justify-content: center;
+  align-items: center;
+  color: #d7eff8;
+  background: rgba(4, 12, 23, 0.66);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  line-height: 1;
+  text-decoration: none;
+  backdrop-filter: blur(12px);
+}
+
+.github-link:hover {
+  color: #ffffff;
+  border-color: rgba(103, 232, 249, 0.52);
+}
+
+.github-link svg {
+  flex: 0 0 auto;
+  color: #67e8f9;
+}
+
 .control-panel {
   position: absolute;
   top: 24px;
