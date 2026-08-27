@@ -4,7 +4,7 @@ import {
   FileUp,
   Globe2,
   List,
-  Map,
+  Map as MapIcon,
   Plane,
   Rotate3D,
   Sparkles,
@@ -30,7 +30,7 @@ type Page = "globe" | "statistics" | "countries" | "history";
 const pages = [
   { id: "globe", label: "Globe", icon: Globe2 },
   { id: "statistics", label: "Statistics", icon: BarChart3 },
-  { id: "countries", label: "Visited Map", icon: Map },
+  { id: "countries", label: "Visited Map", icon: MapIcon },
   { id: "history", label: "History", icon: List },
 ] as const;
 
@@ -95,10 +95,6 @@ export default function App(): ReactElement {
       return matchesAirline && matchesYear;
     });
   }, [flights, selectedAirline, selectedYear]);
-
-  useEffect(() => {
-    setHoveredFlight(null);
-  }, [selectedAirline, selectedYear]);
 
   const setHoverFlight = useCallback((flight: Flight | null) => {
     setHoveredFlight(flight);
@@ -256,7 +252,10 @@ export default function App(): ReactElement {
               id="airline-filter"
               className="select-input"
               value={selectedAirline}
-              onChange={(event) => setSelectedAirline(event.target.value)}
+              onChange={(event) => {
+                setSelectedAirline(event.target.value);
+                setHoveredFlight(null);
+              }}
             >
               {airlines.map((airline) => (
                 <option key={airline} value={airline}>
@@ -274,7 +273,10 @@ export default function App(): ReactElement {
               id="year-filter"
               className="select-input"
               value={selectedYear}
-              onChange={(event) => setSelectedYear(event.target.value)}
+              onChange={(event) => {
+                setSelectedYear(event.target.value);
+                setHoveredFlight(null);
+              }}
             >
               {years.map((year) => (
                 <option key={year} value={year}>

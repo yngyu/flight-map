@@ -9,6 +9,7 @@
     "dev:api": "pnpm run build:server && HOST=127.0.0.1 PORT=8787 node server-dist/server/index.js",
     "build": "tsc && vite build && pnpm run build:server",
     "build:server": "tsc -p tsconfig.server.json",
+    "lint": "biome lint src server vite.config.ts",
     "preview": "vite preview --host 127.0.0.1",
     "start": "node server-dist/server/index.js"
   },
@@ -24,6 +25,7 @@
     "vite": "^8.0.16"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.10",
     "@types/d3-geo": "^3.1.1",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",

@@ -16,7 +16,7 @@ import {
   Sprite,
   SpriteMaterial,
   SRGBColorSpace,
-  Texture,
+  type Texture,
   TextureLoader,
   TubeGeometry,
   Vector3,
@@ -93,7 +93,9 @@ export function createStars(): Points {
 export function createMapLineMesh(): LineSegments<BufferGeometry, LineBasicMaterial> {
   const positions: number[] = [];
 
-  buildCountryBoundaryPaths().forEach((path) => addPathSegments(path, positions));
+  buildCountryBoundaryPaths().forEach((path) => {
+    addPathSegments(path, positions);
+  });
 
   const geometry = new BufferGeometry();
   geometry.setAttribute("position", new Float32BufferAttribute(positions, 3));
