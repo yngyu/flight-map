@@ -1,5 +1,5 @@
 import { useMemo, type ReactElement } from "react";
-import type { Flight } from "../lib/flights";
+import type { Flight } from "../../lib/flights";
 import VisitedMapCanvas from "./VisitedMapCanvas";
 import VisitedMapHeader from "./VisitedMapHeader";
 import { findVisitedCountries } from "./visitedMapData";

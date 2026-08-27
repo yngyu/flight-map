@@ -1,7 +1,7 @@
 import { geoContains, geoEquirectangular, geoPath } from "d3-geo";
 import { feature } from "topojson-client";
-import countriesTopologyJson from "../data/countries-110m.json";
-import type { Flight } from "../lib/flights";
+import countriesTopologyJson from "../../data/countries-110m.json";
+import type { Flight } from "../../lib/flights";
 
 interface CountryProperties {
   readonly name?: string;
