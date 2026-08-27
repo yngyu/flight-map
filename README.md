@@ -4,6 +4,9 @@ An interactive 3D globe for browsing flight diary CSV exports. The app renders e
 
 ![Flight Map screenshot](./screenshot.png)
 
+## Demo site
+https://flight-map.h1hun.com/
+
 ## Features
 
 - Load a MyFlightradar24-style CSV from the browser.
@@ -18,26 +21,27 @@ An interactive 3D globe for browsing flight diary CSV exports. The app renders e
 Install dependencies:
 
 ```bash
-npm install
+corepack enable
+pnpm install
 ```
 
 Run the API and Vite dev server in separate terminals:
 
 ```bash
-npm run dev:api
-npm run dev
+pnpm run dev:api
+pnpm run dev
 ```
 
 Build everything:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Run the production server locally:
 
 ```bash
-npm start
+pnpm start
 ```
 
 The production server listens on `PORT` and defaults to `8080`.
