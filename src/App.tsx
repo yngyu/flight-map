@@ -2,6 +2,7 @@ import { AlertTriangle, FileUp, Plane, Rotate3D, Sparkles } from "lucide-react";
 import type { ChangeEvent, ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import GlobeView from "./components/GlobeView";
+import { loadLatestCsv, saveLatestCsv } from "./lib/csvStorage";
 import type { Flight, FlightLoadResult } from "./lib/flights";
 import { loadDefaultFlights, loadFlightsFromCsvText } from "./lib/flights";
 
@@ -26,7 +27,7 @@ export default function App(): ReactElement {
   useEffect(() => {
     let isMounted = true;
 
-    loadDefaultFlights()
+    loadInitialFlights()
       .then((data) => {
         if (isMounted) {
           setLoadState({ status: "ready", data, error: "" });
@@ -88,8 +89,10 @@ export default function App(): ReactElement {
 
     file
       .text()
-      .then((text) => {
-        return loadFlightsFromCsvText(text, file.name);
+      .then(async (text) => {
+        const data = await loadFlightsFromCsvText(text, file.name);
+        saveLatestCsv({ name: file.name, text });
+        return data;
       })
       .then((data) => {
         setLoadState({ status: "ready", data, error: "" });
@@ -285,6 +288,20 @@ export default function App(): ReactElement {
       </aside>
     </main>
   );
+}
+
+async function loadInitialFlights(): Promise<FlightLoadResult> {
+  const latestCsv = loadLatestCsv();
+
+  if (latestCsv === null) {
+    return loadDefaultFlights();
+  }
+
+  try {
+    return await loadFlightsFromCsvText(latestCsv.text, latestCsv.name);
+  } catch {
+    return loadDefaultFlights();
+  }
 }
 
 function GitHubMark(): ReactElement {
