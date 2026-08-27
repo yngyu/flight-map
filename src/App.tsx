@@ -1,7 +1,21 @@
-import { AlertTriangle, FileUp, Plane, Rotate3D, Sparkles } from "lucide-react";
+import {
+  AlertTriangle,
+  BarChart3,
+  FileUp,
+  Globe2,
+  List,
+  Map as MapIcon,
+  Plane,
+  Rotate3D,
+  Sparkles,
+} from "lucide-react";
 import type { ChangeEvent, ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import FlightHistory from "./components/FlightHistory";
 import GlobeView from "./components/GlobeView";
+import Statistics from "./components/statistics/Statistics";
+import VisitedMap from "./components/visited-map/VisitedMap";
+import { loadLatestCsv, saveLatestCsv } from "./lib/csvStorage";
 import type { Flight, FlightLoadResult } from "./lib/flights";
 import { loadDefaultFlights, loadFlightsFromCsvText } from "./lib/flights";
 
@@ -11,6 +25,15 @@ interface LoadState {
   readonly error: string;
 }
 
+type Page = "globe" | "statistics" | "countries" | "history";
+
+const pages = [
+  { id: "globe", label: "Globe", icon: Globe2 },
+  { id: "statistics", label: "Statistics", icon: BarChart3 },
+  { id: "countries", label: "Visited Map", icon: MapIcon },
+  { id: "history", label: "History", icon: List },
+] as const;
+
 const initialLoadState: LoadState = {
   status: "loading",
   data: null,
@@ -19,6 +42,7 @@ const initialLoadState: LoadState = {
 
 export default function App(): ReactElement {
   const [loadState, setLoadState] = useState<LoadState>(initialLoadState);
+  const [activePage, setActivePage] = useState<Page>("globe");
   const [selectedAirline, setSelectedAirline] = useState("All");
   const [selectedYear, setSelectedYear] = useState("All");
   const [hoveredFlight, setHoveredFlight] = useState<Flight | null>(null);
@@ -26,7 +50,7 @@ export default function App(): ReactElement {
   useEffect(() => {
     let isMounted = true;
 
-    loadDefaultFlights()
+    loadInitialFlights()
       .then((data) => {
         if (isMounted) {
           setLoadState({ status: "ready", data, error: "" });
@@ -72,10 +96,6 @@ export default function App(): ReactElement {
     });
   }, [flights, selectedAirline, selectedYear]);
 
-  useEffect(() => {
-    setHoveredFlight(null);
-  }, [selectedAirline, selectedYear]);
-
   const setHoverFlight = useCallback((flight: Flight | null) => {
     setHoveredFlight(flight);
   }, []);
@@ -88,8 +108,10 @@ export default function App(): ReactElement {
 
     file
       .text()
-      .then((text) => {
-        return loadFlightsFromCsvText(text, file.name);
+      .then(async (text) => {
+        const data = await loadFlightsFromCsvText(text, file.name);
+        saveLatestCsv({ name: file.name, text });
+        return data;
       })
       .then((data) => {
         setLoadState({ status: "ready", data, error: "" });
@@ -121,8 +143,32 @@ export default function App(): ReactElement {
   );
 
   return (
-    <main className="app-shell">
-      <section className="globe-stage" aria-label="Interactive 3D flight globe">
+    <main className={`app-shell page-${activePage}`}>
+      <nav className="page-tabs" aria-label="Main views" role="tablist">
+        {pages.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            id={`${id}-tab`}
+            className="page-tab"
+            type="button"
+            role="tab"
+            aria-selected={activePage === id}
+            aria-controls={`${id}-page`}
+            onClick={() => setActivePage(id)}
+          >
+            <Icon size={17} aria-hidden="true" />
+            <span>{label}</span>
+          </button>
+        ))}
+      </nav>
+
+      <section
+        id="globe-page"
+        className="globe-stage"
+        role="tabpanel"
+        aria-labelledby="globe-tab"
+        aria-label="Interactive 3D flight globe"
+      >
         {loadState.status === "ready" ? (
           <GlobeView
             flights={flights}
@@ -138,17 +184,43 @@ export default function App(): ReactElement {
             {loadState.error}
           </div>
         ) : null}
-        <a
-          className="github-link"
-          href="https://github.com/yngyu/flight-map"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Open flight-map on GitHub"
-        >
-          <GitHubMark />
-        </a>
       </section>
 
+      {activePage === "statistics" && loadState.status === "ready" ? (
+        <Statistics flights={flights} sourceName={loadState.data?.sourceName ?? "CSV"} />
+      ) : null}
+
+      {activePage === "statistics" && loadState.status === "loading" ? (
+        <div className="loading-panel">Loading flight data…</div>
+      ) : null}
+
+      {activePage === "statistics" && loadState.status === "error" ? (
+        <div className="error-panel">
+          <AlertTriangle size={18} aria-hidden="true" />
+          {loadState.error}
+        </div>
+      ) : null}
+
+      {activePage === "countries" ? (
+        <VisitedMap flights={flights} sourceName={loadState.data?.sourceName ?? "CSV"} />
+      ) : null}
+
+      {activePage === "history" && loadState.status === "ready" ? (
+        <FlightHistory flights={flights} sourceName={loadState.data?.sourceName ?? "CSV"} />
+      ) : null}
+
+      {activePage === "history" && loadState.status === "loading" ? (
+        <div className="loading-panel">Loading flight history…</div>
+      ) : null}
+
+      {activePage === "history" && loadState.status === "error" ? (
+        <div className="error-panel">
+          <AlertTriangle size={18} aria-hidden="true" />
+          {loadState.error}
+        </div>
+      ) : null}
+
+      {activePage === "globe" ? (
       <aside className="control-panel" aria-label="Flight map controls">
         <div className="brand-row">
           <span className="brand-icon">
@@ -180,7 +252,10 @@ export default function App(): ReactElement {
               id="airline-filter"
               className="select-input"
               value={selectedAirline}
-              onChange={(event) => setSelectedAirline(event.target.value)}
+              onChange={(event) => {
+                setSelectedAirline(event.target.value);
+                setHoveredFlight(null);
+              }}
             >
               {airlines.map((airline) => (
                 <option key={airline} value={airline}>
@@ -198,7 +273,10 @@ export default function App(): ReactElement {
               id="year-filter"
               className="select-input"
               value={selectedYear}
-              onChange={(event) => setSelectedYear(event.target.value)}
+              onChange={(event) => {
+                setSelectedYear(event.target.value);
+                setHoveredFlight(null);
+              }}
             >
               {years.map((year) => (
                 <option key={year} value={year}>
@@ -281,9 +359,34 @@ export default function App(): ReactElement {
             {lookupWarnings.join(" ")}
           </div>
         ) : null}
+
+        <a
+          className="github-link"
+          href="https://github.com/yngyu/flight-map"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Open flight-map on GitHub"
+        >
+          <GitHubMark />
+        </a>
       </aside>
+      ) : null}
     </main>
   );
+}
+
+async function loadInitialFlights(): Promise<FlightLoadResult> {
+  const latestCsv = loadLatestCsv();
+
+  if (latestCsv === null) {
+    return loadDefaultFlights();
+  }
+
+  try {
+    return await loadFlightsFromCsvText(latestCsv.text, latestCsv.name);
+  } catch {
+    return loadDefaultFlights();
+  }
 }
 
 function GitHubMark(): ReactElement {

@@ -4,9 +4,13 @@ An interactive 3D globe for browsing flight diary CSV exports. The app renders e
 
 ![Flight Map screenshot](./screenshot.png)
 
+## Demo site
+https://flight-map.h1hun.com/
+
 ## Features
 
 - Load a MyFlightradar24-style CSV from the browser.
+- Keep the latest successfully loaded CSV in browser local storage and restore it on the next visit.
 - Use a fictional bundled example CSV by default.
 - Rotate and zoom the globe with pointer controls.
 - Resolve airport coordinates from a local seed cache, with server-side fallback to OurAirports data.
@@ -18,26 +22,27 @@ An interactive 3D globe for browsing flight diary CSV exports. The app renders e
 Install dependencies:
 
 ```bash
-npm install
+corepack enable
+pnpm install
 ```
 
 Run the API and Vite dev server in separate terminals:
 
 ```bash
-npm run dev:api
-npm run dev
+pnpm run dev:api
+pnpm run dev
 ```
 
 Build everything:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Run the production server locally:
 
 ```bash
-npm start
+pnpm start
 ```
 
 The production server listens on `PORT` and defaults to `8080`.
@@ -45,6 +50,8 @@ The production server listens on `PORT` and defaults to `8080`.
 ## CSV Data
 
 The bundled `public/flightdiary_example.csv` is fictional sample data. Personal flight diary exports should be loaded through the browser and should not be committed to `public/`, because files in `public/` are served directly.
+
+The latest successfully loaded CSV is stored only in that browser's local storage and is automatically restored on later visits. It is not uploaded as a file to the server.
 
 ## Container
 
