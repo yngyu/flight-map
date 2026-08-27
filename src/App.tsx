@@ -138,15 +138,6 @@ export default function App(): ReactElement {
             {loadState.error}
           </div>
         ) : null}
-        <a
-          className="github-link"
-          href="https://github.com/yngyu/flight-map"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Open flight-map on GitHub"
-        >
-          <GitHubMark />
-        </a>
       </section>
 
       <aside className="control-panel" aria-label="Flight map controls">
@@ -281,6 +272,16 @@ export default function App(): ReactElement {
             {lookupWarnings.join(" ")}
           </div>
         ) : null}
+
+        <a
+          className="github-link"
+          href="https://github.com/yngyu/flight-map"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Open flight-map on GitHub"
+        >
+          <GitHubMark />
+        </a>
       </aside>
     </main>
   );

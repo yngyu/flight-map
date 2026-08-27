@@ -46,7 +46,7 @@ select {
 
 .globe-stage {
   position: absolute;
-  inset: 0;
+  inset: 0 418px 0 0;
 }
 
 .globe-canvas {
@@ -60,11 +60,8 @@ select {
 }
 
 .github-link {
-  position: absolute;
-  right: 24px;
-  bottom: 18px;
-  z-index: 2;
   display: inline-flex;
+  justify-self: end;
   width: 38px;
   height: 38px;
   min-height: 36px;
@@ -349,6 +346,7 @@ h1 {
 
   .globe-stage {
     position: relative;
+    inset: auto;
     height: 64svh;
     min-height: 430px;
   }

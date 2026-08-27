@@ -67,8 +67,10 @@ export default function GlobeView({
 
     const scene = new Scene();
     const initialGlobeView = calculateInitialGlobeView(flights);
-    const camera = new PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.copy(initialGlobeView.cameraPosition);
+    const initialAspect = container.clientWidth / container.clientHeight;
+    const camera = new PerspectiveCamera(45, initialAspect, 0.1, 100);
+    let cameraFitScale = calculateCameraFitScale(initialAspect);
+    camera.position.copy(initialGlobeView.cameraPosition).multiplyScalar(cameraFitScale);
 
     const renderer = new WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -80,7 +82,7 @@ export default function GlobeView({
     controls.dampingFactor = 0.045;
     controls.rotateSpeed = 0.46;
     controls.minDistance = 3.25;
-    controls.maxDistance = 9;
+    controls.maxDistance = 16;
     controls.autoRotate = false;
 
     const globeGroup = new Group();
@@ -116,7 +118,15 @@ export default function GlobeView({
     let lastHoveredFlightId = "";
 
     const onResize = (): void => {
-      camera.aspect = container.clientWidth / container.clientHeight;
+      const nextAspect = container.clientWidth / container.clientHeight;
+      const nextCameraFitScale = calculateCameraFitScale(nextAspect);
+      const cameraOffset = camera.position.clone().sub(controls.target);
+
+      camera.position
+        .copy(controls.target)
+        .add(cameraOffset.multiplyScalar(nextCameraFitScale / cameraFitScale));
+      cameraFitScale = nextCameraFitScale;
+      camera.aspect = nextAspect;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
     };
@@ -207,6 +217,12 @@ export default function GlobeView({
 
 function isFlight(value: unknown): value is Flight {
   return typeof value === "object" && value !== null && "start" in value && "destination" in value;
+}
+
+function calculateCameraFitScale(aspect: number): number {
+  const comfortableAspect = 0.8;
+
+  return Math.min(1.75, Math.max(1, comfortableAspect / aspect));
 }
 
 function calculateInitialGlobeView(flights: readonly Flight[]): InitialGlobeView {
