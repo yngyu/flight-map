@@ -11,6 +11,7 @@ import {
 import type { ChangeEvent, ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import GlobeView from "./components/GlobeView";
+import Statistics from "./components/Statistics";
 import VisitedMap from "./components/VisitedMap";
 import { loadLatestCsv, saveLatestCsv } from "./lib/csvStorage";
 import type { Flight, FlightLoadResult } from "./lib/flights";
@@ -186,25 +187,19 @@ export default function App(): ReactElement {
         ) : null}
       </section>
 
-      {activePage === "statistics" ? (
-        <section
-          id="statistics-page"
-          className="page-placeholder"
-          role="tabpanel"
-          aria-labelledby="statistics-tab"
-        >
-          <span className="page-eyebrow">Flight Map</span>
-          <h2>Flight Statistics</h2>
-          <p>Charts and summaries based on your loaded CSV will appear here.</p>
-          <div className="placeholder-source">
-            <Plane size={18} aria-hidden="true" />
-            <span>
-              {loadState.status === "ready"
-                ? `${flights.length} flights loaded from ${loadState.data?.sourceName ?? "CSV"}`
-                : "Loading flight data…"}
-            </span>
-          </div>
-        </section>
+      {activePage === "statistics" && loadState.status === "ready" ? (
+        <Statistics flights={flights} sourceName={loadState.data?.sourceName ?? "CSV"} />
+      ) : null}
+
+      {activePage === "statistics" && loadState.status === "loading" ? (
+        <div className="loading-panel">Loading flight data…</div>
+      ) : null}
+
+      {activePage === "statistics" && loadState.status === "error" ? (
+        <div className="error-panel">
+          <AlertTriangle size={18} aria-hidden="true" />
+          {loadState.error}
+        </div>
       ) : null}
 
       {activePage === "countries" ? (

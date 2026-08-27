@@ -162,6 +162,587 @@ select {
   display: none;
 }
 
+.statistics-page {
+  position: absolute;
+  inset: 0;
+  padding: 104px 32px 32px;
+  overflow-y: auto;
+}
+
+.statistics-header,
+.statistics-summary,
+.statistics-details,
+.statistics-extremes,
+.statistics-usage,
+.statistics-final-charts {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.statistics-header h2 {
+  margin-top: 6px;
+  color: #f5fdff;
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+}
+
+.statistics-header p {
+  margin-top: 6px;
+  color: #7e9daa;
+  font-size: 0.86rem;
+}
+
+.statistics-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.statistics-card {
+  display: flex;
+  container-type: inline-size;
+  aspect-ratio: 1.95;
+  min-width: 0;
+  align-items: center;
+  gap: clamp(8px, 6cqi, 18px);
+  padding: clamp(10px, 5cqi, 16px) clamp(10px, 7cqi, 20px);
+  background:
+    radial-gradient(circle at 100% 0, rgba(34, 211, 238, 0.1), transparent 45%),
+    rgba(7, 15, 27, 0.74);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+}
+
+.statistics-card-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: clamp(32px, 16cqi, 46px);
+  height: clamp(32px, 16cqi, 46px);
+  place-items: center;
+  color: #06111f;
+  background: #7dd3fc;
+  border-radius: 10px;
+  box-shadow: 0 0 26px rgba(125, 211, 252, 0.25);
+}
+
+.statistics-card-icon.time {
+  background: #a5b4fc;
+}
+
+.statistics-card-icon.distance {
+  background: #f0abfc;
+}
+
+.statistics-card-icon.co2 {
+  background: #5eead4;
+}
+
+.statistics-card > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.statistics-card-label {
+  display: block;
+  color: #9ebdca;
+  font-size: clamp(0.62rem, 3.5cqi, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.statistics-card strong {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 10px;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: clamp(0.8rem, 12cqi, 2.75rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.statistics-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.flight-time-summary,
+.distance-summary {
+  min-width: 0;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(165, 180, 252, 0.12), transparent 48%),
+    rgba(7, 15, 27, 0.74);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+}
+
+.flight-time-summary-heading,
+.distance-summary-heading {
+  display: grid;
+  width: 100%;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.flight-time-summary-heading > strong,
+.distance-summary-heading > strong {
+  display: block;
+  min-width: 0;
+  justify-self: center;
+  color: #ffffff;
+  font-size: clamp(1.5rem, 2.5vw, 2.35rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+.flight-time-conversions {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-top: 24px;
+}
+
+.flight-time-conversion {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.flight-time-conversion strong {
+  color: #ffffff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.flight-time-conversion span {
+  color: #a9c6d3;
+  font-size: 1rem;
+}
+
+.distance-comparisons {
+  display: grid;
+  gap: 15px;
+  margin-top: 24px;
+}
+
+.distance-comparison {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 58px;
+  align-items: center;
+  gap: 12px;
+}
+
+.distance-comparison-icon {
+  display: grid;
+  place-items: center;
+  color: #a9c6d3;
+}
+
+.distance-comparison > strong {
+  color: #e8fbff;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.distance-gauge {
+  position: relative;
+  height: 8px;
+  overflow: visible;
+  background: rgba(4, 12, 23, 0.9);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  border-radius: 999px;
+}
+
+.distance-gauge-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  min-width: 2px;
+  background: linear-gradient(90deg, #0e7490, #67e8f9);
+  border-radius: inherit;
+  box-shadow: 0 0 10px rgba(103, 232, 249, 0.38);
+}
+
+.distance-gauge-marker {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border: 1px solid #082f49;
+  border-radius: 2px;
+  box-shadow: 0 0 7px rgba(255, 255, 255, 0.8);
+}
+
+.statistics-extremes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.extremes-card {
+  min-width: 0;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(34, 211, 238, 0.09), transparent 48%),
+    rgba(7, 15, 27, 0.74);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+}
+
+.extremes-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.extremes-card-heading h3 {
+  margin: 6px 0 0;
+  color: #f5fdff;
+  font-size: 1rem;
+  font-weight: 680;
+}
+
+.extremes-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.flight-extreme {
+  min-width: 0;
+  padding: 16px;
+  background: rgba(4, 12, 23, 0.68);
+  border: 1px solid rgba(125, 211, 252, 0.13);
+  border-radius: 8px;
+}
+
+.flight-extreme > span {
+  display: block;
+  color: #8fb5c6;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.flight-extreme > strong {
+  display: block;
+  margin-top: 9px;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.flight-extreme > strong b {
+  color: #67e8f9;
+  font-weight: 500;
+}
+
+.flight-extreme > small {
+  display: block;
+  margin-top: 9px;
+  color: #b9d5df;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.flight-extreme > time {
+  display: block;
+  margin-top: 7px;
+  color: #7899a6;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.statistics-usage,
+.statistics-final-charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.usage-card {
+  min-width: 0;
+  padding: 24px;
+  color: inherit;
+  text-align: left;
+  background:
+    radial-gradient(circle at 100% 0, rgba(34, 211, 238, 0.09), transparent 48%),
+    rgba(7, 15, 27, 0.74);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.usage-card:hover {
+  background-color: rgba(10, 24, 40, 0.82);
+  border-color: rgba(103, 232, 249, 0.38);
+}
+
+.usage-card:focus-visible {
+  outline: 2px solid #67e8f9;
+  outline-offset: 2px;
+}
+
+.usage-card > header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.usage-card > header > div {
+  min-width: 0;
+}
+
+.usage-card > header h3 {
+  margin: 6px 0 0;
+  color: #f5fdff;
+  font-size: 1rem;
+}
+
+.usage-card > header > svg {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: #7899a6;
+}
+
+.usage-list {
+  display: grid;
+  gap: 13px;
+  margin-top: 24px;
+}
+
+.usage-list > p {
+  color: #7899a6;
+  font-size: 0.85rem;
+}
+
+.usage-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 1.2fr) minmax(70px, 1fr) max-content;
+  align-items: center;
+  gap: 12px;
+}
+
+.usage-row > span:first-child {
+  overflow: hidden;
+  color: #c5dce5;
+  font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.usage-row > strong {
+  color: #ffffff;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.usage-bar {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  background: rgba(4, 12, 23, 0.9);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 999px;
+}
+
+.usage-bar > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, #0e7490, #67e8f9);
+  border-radius: inherit;
+  box-shadow: 0 0 9px rgba(103, 232, 249, 0.34);
+}
+
+.usage-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  padding: 24px;
+  place-items: center;
+  background: rgba(1, 4, 10, 0.78);
+  backdrop-filter: blur(8px);
+}
+
+.usage-dialog {
+  width: min(760px, 100%);
+  max-height: min(760px, calc(100vh - 48px));
+  padding: 26px;
+  overflow-y: auto;
+  color: #e9fbff;
+  background: #07111e;
+  border: 1px solid rgba(103, 232, 249, 0.26);
+  border-radius: 14px;
+  box-shadow: 0 28px 100px rgba(0, 0, 0, 0.58);
+}
+
+.usage-dialog > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.usage-dialog > header h2 {
+  margin-top: 7px;
+  color: #f5fdff;
+  font-size: 1.5rem;
+}
+
+.usage-dialog > header button {
+  display: grid;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  place-items: center;
+  color: #b9d5df;
+  background: rgba(4, 12, 23, 0.78);
+  border: 1px solid rgba(125, 211, 252, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.usage-dialog > header button:hover {
+  color: #ffffff;
+  border-color: rgba(103, 232, 249, 0.52);
+}
+
+.usage-dialog .usage-list {
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.usage-dialog .usage-row {
+  grid-template-columns: minmax(180px, 1.2fr) minmax(120px, 2fr) max-content;
+}
+
+.yearly-flights-card {
+  min-width: 0;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 100% 0, rgba(165, 180, 252, 0.1), transparent 48%),
+    rgba(7, 15, 27, 0.74);
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+}
+
+.yearly-flights-card > header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.yearly-flights-card > header h3 {
+  margin: 6px 0 0;
+  color: #f5fdff;
+  font-size: 1rem;
+}
+
+.yearly-flights-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 18px;
+  overflow: visible;
+}
+
+.year-grid-line {
+  stroke: rgba(125, 211, 252, 0.12);
+  stroke-width: 1;
+}
+
+.year-axis-count,
+.year-axis-label {
+  fill: #7899a6;
+  font-family: inherit;
+  font-size: 10px;
+}
+
+.year-axis-count {
+  text-anchor: end;
+}
+
+.year-axis-label {
+  text-anchor: middle;
+}
+
+.year-chart-line {
+  fill: none;
+  stroke: #67e8f9;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(103, 232, 249, 0.42));
+}
+
+.year-chart-point {
+  fill: #07111e;
+  stroke: #a5f3fc;
+  stroke-width: 2.5;
+  cursor: default;
+}
+
+.year-point-count {
+  fill: #ffffff;
+  stroke: #07111e;
+  stroke-width: 3px;
+  paint-order: stroke;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  text-anchor: middle;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.year-chart-datum:hover .year-point-count {
+  opacity: 1;
+}
+
+.yearly-flights-empty {
+  margin-top: 28px;
+  color: #7899a6;
+  font-size: 0.85rem;
+}
+
 .visited-map-page {
   position: absolute;
   inset: 0;
@@ -633,6 +1214,12 @@ h1 {
   border: 1px solid var(--panel-border);
 }
 
+@media (hover: none), (max-width: 1024px) {
+  .year-point-count {
+    opacity: 1;
+  }
+}
+
 @media (max-width: 760px) {
   body {
     overflow: auto;
@@ -676,6 +1263,45 @@ h1 {
     position: relative;
     min-height: calc(100svh - 68px);
     padding: 64px 24px;
+  }
+
+  .statistics-page {
+    position: relative;
+    min-height: calc(100svh - 68px);
+    padding: 42px 12px 20px;
+  }
+
+  .statistics-summary,
+  .statistics-details,
+  .statistics-extremes,
+  .statistics-usage,
+  .statistics-final-charts {
+    grid-template-columns: 1fr;
+  }
+
+  .usage-card {
+    padding: 20px;
+  }
+
+  .usage-row,
+  .usage-dialog .usage-row {
+    grid-template-columns: minmax(90px, 1.2fr) minmax(50px, 1fr) max-content;
+    gap: 8px;
+  }
+
+  .usage-dialog-backdrop {
+    padding: 12px;
+  }
+
+  .usage-dialog {
+    max-height: calc(100svh - 24px);
+    padding: 20px;
+  }
+
+  .statistics-card {
+    aspect-ratio: auto;
+    min-height: 120px;
+    padding: 12px 20px;
   }
 
   .visited-map-page {

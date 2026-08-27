@@ -78,6 +78,12 @@ export function countryName(country: CountryFeature): string {
   return country.properties?.name ?? "Unknown country";
 }
 
+export function countryAtCoordinates(lon: number, lat: number): string | undefined {
+  const country = countries.find((candidate) => geoContains(candidate, [lon, lat]));
+
+  return country === undefined ? undefined : countryName(country);
+}
+
 export function countryLabel(name: string): string {
   return countryLabelAbbreviations[name] ?? name;
 }
