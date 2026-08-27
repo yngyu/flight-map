@@ -5,6 +5,8 @@ import { flightResourceClient } from "./flightResourceClient";
 export interface Flight {
   readonly id: string;
   readonly date: string;
+  readonly departureTime: string;
+  readonly arrivalTime: string;
   readonly year: string;
   readonly startName: string;
   readonly destinationName: string;
@@ -35,6 +37,8 @@ interface AirportReference {
 interface NormalizedFlightRow {
   readonly idParts: readonly string[];
   readonly date: string;
+  readonly departureTime: string;
+  readonly arrivalTime: string;
   readonly start: AirportReference;
   readonly destination: AirportReference;
   readonly airline: string;
@@ -94,6 +98,8 @@ async function normalizeFlights(table: CsvTable, sourceName: string): Promise<Fl
     flights.push({
       id: `${index}-${row.idParts.join("-")}`,
       date: row.date,
+      departureTime: row.departureTime,
+      arrivalTime: row.arrivalTime,
       year: extractYear(row.date),
       startName: row.start.label,
       destinationName: row.destination.label,
@@ -138,6 +144,10 @@ function toMyFlightsRow(row: Readonly<Record<string, string>>): NormalizedFlight
   return {
     idParts: [date, start.label, destination.label],
     date,
+    departureTime: normalizeTime(
+      getValue(row, "Dep time", "Departure time", "Departure Time"),
+    ),
+    arrivalTime: normalizeTime(getValue(row, "Arr time", "Arrival time", "Arrival Time")),
     start,
     destination,
     airline: getValue(row, "Airline"),
@@ -157,6 +167,8 @@ function toFlightDiaryRow(row: Readonly<Record<string, string>>): NormalizedFlig
   return {
     idParts: [date, getValue(row, "Flight number"), start.code, destination.code],
     date,
+    departureTime: normalizeTime(getValue(row, "Dep time", "Departure time")),
+    arrivalTime: normalizeTime(getValue(row, "Arr time", "Arrival time")),
     start,
     destination,
     airline: trimTrailingParentheses(getValue(row, "Airline")),
@@ -234,6 +246,16 @@ function extractYear(date: string): string {
   const yearMatch = /^(\d{4})/.exec(date) ?? /(\d{4})$/.exec(date);
 
   return yearMatch?.[1] ?? "Unknown";
+}
+
+function normalizeTime(value: string): string {
+  const parts = value.split(":");
+
+  if (parts.length >= 2) {
+    return `${parts[0]}:${parts[1]}`;
+  }
+
+  return value;
 }
 
 function normalizeDuration(value: string): string {

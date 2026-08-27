@@ -12,6 +12,37 @@
 
 * {
   box-sizing: border-box;
+  scrollbar-color: rgba(125, 211, 252, 0.62) transparent;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  min-height: 42px;
+  background: rgba(125, 211, 252, 0.62);
+  background-clip: content-box;
+  border: 2px solid transparent;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(165, 243, 252, 0.9);
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 html,
@@ -158,7 +189,8 @@ select {
 }
 
 .page-statistics .globe-stage,
-.page-countries .globe-stage {
+.page-countries .globe-stage,
+.page-history .globe-stage {
   display: none;
 }
 
@@ -743,6 +775,151 @@ select {
   font-size: 0.85rem;
 }
 
+.flight-history-page {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 20px;
+  padding: 104px 32px 28px;
+}
+
+.flight-history-header {
+  display: flex;
+  width: min(1400px, 100%);
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 auto;
+}
+
+.flight-history-header h2 {
+  margin-top: 6px;
+  color: #f5fdff;
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+}
+
+.flight-history-header p {
+  margin-top: 6px;
+  color: #7e9daa;
+  font-size: 0.86rem;
+}
+
+.flight-history-count {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  color: #b9d5df;
+  background: rgba(7, 15, 27, 0.72);
+  border: 1px solid rgba(103, 232, 249, 0.2);
+  border-radius: 9px;
+  backdrop-filter: blur(12px);
+}
+
+.flight-history-count svg,
+.flight-history-count strong {
+  color: #67e8f9;
+}
+
+.flight-history-count strong {
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.flight-history-count span {
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+
+.flight-history-table-frame {
+  position: relative;
+  width: min(1400px, 100%);
+  min-height: 0;
+  margin: 0 auto;
+  overflow: auto;
+  background: rgba(2, 7, 13, 0.64);
+  border: 1px solid rgba(125, 211, 252, 0.14);
+  border-radius: 12px;
+  box-shadow: inset 0 0 70px rgba(0, 0, 0, 0.26);
+}
+
+.flight-history-table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.flight-history-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 14px 18px;
+  color: #8fb5c6;
+  background: rgba(7, 17, 30, 0.97);
+  border-bottom: 1px solid rgba(125, 211, 252, 0.2);
+  font-size: 0.72rem;
+  font-weight: 720;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+}
+
+.flight-history-table td {
+  padding: 15px 18px;
+  color: #c5dce5;
+  border-bottom: 1px solid rgba(125, 211, 252, 0.09);
+  font-size: 0.84rem;
+  line-height: 1.35;
+  vertical-align: middle;
+}
+
+.flight-history-table tbody tr:nth-child(even) {
+  background: rgba(125, 211, 252, 0.025);
+}
+
+.flight-history-table tbody tr:hover {
+  background: rgba(34, 211, 238, 0.065);
+}
+
+.history-date-time,
+.history-airport {
+  display: grid;
+  gap: 3px;
+}
+
+.history-date-time strong,
+.history-airport strong {
+  color: #f5fdff;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.history-date-time > span,
+.history-airport > span {
+  color: #7899a6;
+  font-size: 0.75rem;
+}
+
+.history-airport strong {
+  color: #67e8f9;
+  font-size: 0.94rem;
+  letter-spacing: 0.04em;
+}
+
+.history-empty-value {
+  color: #5e7a86;
+}
+
+.flight-history-empty {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  color: #7899a6;
+}
+
 .visited-map-page {
   position: absolute;
   inset: 0;
@@ -1237,14 +1414,15 @@ h1 {
     left: auto;
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin: 12px 12px 0;
   }
 
   .page-tab {
     justify-content: center;
-    padding: 0 8px;
-    font-size: 0.82rem;
+    gap: 4px;
+    padding: 0 3px;
+    font-size: 0.72rem;
   }
 
   .globe-stage {
@@ -1309,6 +1487,28 @@ h1 {
     min-height: calc(100svh - 68px);
     gap: 16px;
     padding: 42px 12px 20px;
+  }
+
+  .flight-history-page {
+    position: relative;
+    height: calc(100svh - 68px);
+    min-height: 540px;
+    gap: 16px;
+    padding: 42px 12px 20px;
+  }
+
+  .flight-history-header {
+    align-items: flex-start;
+  }
+
+  .flight-history-count {
+    padding: 9px 11px;
+  }
+
+  .flight-history-table th,
+  .flight-history-table td {
+    padding-right: 14px;
+    padding-left: 14px;
   }
 
   .visited-map-header {

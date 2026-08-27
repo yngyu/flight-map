@@ -3,6 +3,7 @@ import {
   BarChart3,
   FileUp,
   Globe2,
+  List,
   Map,
   Plane,
   Rotate3D,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import type { ChangeEvent, ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import FlightHistory from "./components/FlightHistory";
 import GlobeView from "./components/GlobeView";
 import Statistics from "./components/Statistics";
 import VisitedMap from "./components/VisitedMap";
@@ -23,12 +25,13 @@ interface LoadState {
   readonly error: string;
 }
 
-type Page = "globe" | "statistics" | "countries";
+type Page = "globe" | "statistics" | "countries" | "history";
 
 const pages = [
   { id: "globe", label: "Globe", icon: Globe2 },
   { id: "statistics", label: "Statistics", icon: BarChart3 },
   { id: "countries", label: "Visited Map", icon: Map },
+  { id: "history", label: "History", icon: List },
 ] as const;
 
 const initialLoadState: LoadState = {
@@ -204,6 +207,21 @@ export default function App(): ReactElement {
 
       {activePage === "countries" ? (
         <VisitedMap flights={flights} sourceName={loadState.data?.sourceName ?? "CSV"} />
+      ) : null}
+
+      {activePage === "history" && loadState.status === "ready" ? (
+        <FlightHistory flights={flights} sourceName={loadState.data?.sourceName ?? "CSV"} />
+      ) : null}
+
+      {activePage === "history" && loadState.status === "loading" ? (
+        <div className="loading-panel">Loading flight history…</div>
+      ) : null}
+
+      {activePage === "history" && loadState.status === "error" ? (
+        <div className="error-panel">
+          <AlertTriangle size={18} aria-hidden="true" />
+          {loadState.error}
+        </div>
       ) : null}
 
       {activePage === "globe" ? (
