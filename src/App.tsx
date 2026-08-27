@@ -1,7 +1,17 @@
-import { AlertTriangle, FileUp, Plane, Rotate3D, Sparkles } from "lucide-react";
+import {
+  AlertTriangle,
+  BarChart3,
+  FileUp,
+  Globe2,
+  Map,
+  Plane,
+  Rotate3D,
+  Sparkles,
+} from "lucide-react";
 import type { ChangeEvent, ReactElement } from "react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import GlobeView from "./components/GlobeView";
+import VisitedMap from "./components/VisitedMap";
 import { loadLatestCsv, saveLatestCsv } from "./lib/csvStorage";
 import type { Flight, FlightLoadResult } from "./lib/flights";
 import { loadDefaultFlights, loadFlightsFromCsvText } from "./lib/flights";
@@ -12,6 +22,14 @@ interface LoadState {
   readonly error: string;
 }
 
+type Page = "globe" | "statistics" | "countries";
+
+const pages = [
+  { id: "globe", label: "Globe", icon: Globe2 },
+  { id: "statistics", label: "Statistics", icon: BarChart3 },
+  { id: "countries", label: "Visited Map", icon: Map },
+] as const;
+
 const initialLoadState: LoadState = {
   status: "loading",
   data: null,
@@ -20,6 +38,7 @@ const initialLoadState: LoadState = {
 
 export default function App(): ReactElement {
   const [loadState, setLoadState] = useState<LoadState>(initialLoadState);
+  const [activePage, setActivePage] = useState<Page>("globe");
   const [selectedAirline, setSelectedAirline] = useState("All");
   const [selectedYear, setSelectedYear] = useState("All");
   const [hoveredFlight, setHoveredFlight] = useState<Flight | null>(null);
@@ -124,8 +143,32 @@ export default function App(): ReactElement {
   );
 
   return (
-    <main className="app-shell">
-      <section className="globe-stage" aria-label="Interactive 3D flight globe">
+    <main className={`app-shell page-${activePage}`}>
+      <nav className="page-tabs" aria-label="Main views" role="tablist">
+        {pages.map(({ id, label, icon: Icon }) => (
+          <button
+            key={id}
+            id={`${id}-tab`}
+            className="page-tab"
+            type="button"
+            role="tab"
+            aria-selected={activePage === id}
+            aria-controls={`${id}-page`}
+            onClick={() => setActivePage(id)}
+          >
+            <Icon size={17} aria-hidden="true" />
+            <span>{label}</span>
+          </button>
+        ))}
+      </nav>
+
+      <section
+        id="globe-page"
+        className="globe-stage"
+        role="tabpanel"
+        aria-labelledby="globe-tab"
+        aria-label="Interactive 3D flight globe"
+      >
         {loadState.status === "ready" ? (
           <GlobeView
             flights={flights}
@@ -143,6 +186,32 @@ export default function App(): ReactElement {
         ) : null}
       </section>
 
+      {activePage === "statistics" ? (
+        <section
+          id="statistics-page"
+          className="page-placeholder"
+          role="tabpanel"
+          aria-labelledby="statistics-tab"
+        >
+          <span className="page-eyebrow">Flight Map</span>
+          <h2>Flight Statistics</h2>
+          <p>Charts and summaries based on your loaded CSV will appear here.</p>
+          <div className="placeholder-source">
+            <Plane size={18} aria-hidden="true" />
+            <span>
+              {loadState.status === "ready"
+                ? `${flights.length} flights loaded from ${loadState.data?.sourceName ?? "CSV"}`
+                : "Loading flight data…"}
+            </span>
+          </div>
+        </section>
+      ) : null}
+
+      {activePage === "countries" ? (
+        <VisitedMap flights={flights} sourceName={loadState.data?.sourceName ?? "CSV"} />
+      ) : null}
+
+      {activePage === "globe" ? (
       <aside className="control-panel" aria-label="Flight map controls">
         <div className="brand-row">
           <span className="brand-icon">
@@ -286,6 +355,7 @@ export default function App(): ReactElement {
           <GitHubMark />
         </a>
       </aside>
+      ) : null}
     </main>
   );
 }
