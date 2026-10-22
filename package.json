@@ -17,24 +17,24 @@
     "start": "node server-dist/server/index.js"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.1.2",
     "d3-geo": "^3.1.1",
-    "lucide-react": "^1.21.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "three": "^0.184.0",
+    "lucide-react": "^1.59.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "three": "^0.186.1",
     "topojson-client": "^3.1.0",
     "typescript": "^6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.3.4"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.10",
+    "@biomejs/biome": "^2.5.15",
     "@types/d3-geo": "^3.1.1",
     "@types/node": "^24.13.2",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@types/three": "^0.184.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/three": "^0.186.0",
     "@types/topojson-client": "^3.1.5",
-    "playwright": "^1.61.0"
+    "playwright": "^1.64.1"
   }
 }
