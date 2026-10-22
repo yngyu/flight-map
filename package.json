@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "packageManager": "pnpm@11.24.0",
+  "engines": {
+    "node": ">=24.22.1"
+  },
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "dev:api": "pnpm run build:server && HOST=127.0.0.1 PORT=8787 node server-dist/server/index.js",
