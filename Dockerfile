@@ -1,14 +1,14 @@
-FROM node:26.12.0-alpine AS build
+FROM node:26.12.1-alpine AS build
 
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile
+RUN npm install --global corepack && corepack enable && pnpm install --frozen-lockfile
 
 COPY . .
 RUN pnpm run build
 
-FROM node:26.12.0-alpine
+FROM node:26.12.1-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production
