@@ -72,8 +72,8 @@ export default function GlobeView({
     let cameraFitScale = calculateCameraFitScale(initialAspect);
     camera.position.copy(initialGlobeView.cameraPosition).multiplyScalar(cameraFitScale);
 
-    const renderer = new WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
     renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(renderer.domElement);
 
@@ -84,6 +84,14 @@ export default function GlobeView({
     controls.minDistance = 3.25;
     controls.maxDistance = 16;
     controls.autoRotate = false;
+
+    let lastInteractionTime = performance.now();
+    let lastRenderTime = 0;
+    const markInteraction = (): void => {
+      lastInteractionTime = performance.now();
+    };
+    controls.addEventListener("change", markInteraction);
+    controls.addEventListener("start", markInteraction);
 
     const globeGroup = new Group();
     globeGroup.quaternion.copy(initialGlobeView.globeQuaternion);
@@ -133,6 +141,20 @@ export default function GlobeView({
 
     const renderFrame = (): void => {
       animationFrameId = window.requestAnimationFrame(renderFrame);
+
+      if (document.hidden) {
+        return;
+      }
+
+      const now = performance.now();
+      const isInteracting =
+        pointerRef.current !== null || now - lastInteractionTime < interactionGraceMilliseconds;
+
+      if (!isInteracting && now - lastRenderTime < idleFrameIntervalMilliseconds) {
+        return;
+      }
+
+      lastRenderTime = now;
       controls.update();
 
       routeObjects.forEach((routeObject, index) => {
@@ -179,6 +201,8 @@ export default function GlobeView({
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
+      controls.removeEventListener("change", markInteraction);
+      controls.removeEventListener("start", markInteraction);
       window.removeEventListener("resize", onResize);
       controls.dispose();
       renderer.dispose();
@@ -214,6 +238,10 @@ export default function GlobeView({
     />
   );
 }
+
+const maxPixelRatio = 1.5;
+const interactionGraceMilliseconds = 1500;
+const idleFrameIntervalMilliseconds = 1000 / 30;
 
 function isFlight(value: unknown): value is Flight {
   return typeof value === "object" && value !== null && "start" in value && "destination" in value;
